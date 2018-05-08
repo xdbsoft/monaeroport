@@ -3,6 +3,7 @@ import { Component, OnInit, Input, ElementRef, NgZone, SimpleChanges, OnChanges 
 import * as L  from 'leaflet';
 import { AirportInfo } from '../../model/airport-info';
 import { Feature } from 'geojson';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'monapt-leaflet',
@@ -32,7 +33,12 @@ export class LeafletComponent implements OnInit, OnChanges {
 
     console.log('map', this.map);
 
-    L.tileLayer('http://localhost:8085/tiles/{z}/{x}/{-y}.png', {
+    let osmUrl = 'http://localhost:8085/tiles/{z}/{x}/{-y}.png';
+    if (environment.production) {
+      osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    }
+
+    L.tileLayer(osmUrl, {
       maxZoom: 18,
       attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     }).addTo(this.map);
