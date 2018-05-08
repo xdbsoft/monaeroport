@@ -18,6 +18,13 @@ export class AirportInfoService {
 
   }
 
+  search(term: string): Observable<AirportInfo[]> {
+
+    return this.http.get<AirportInfo[]>('assets/airportInfo.json').pipe(
+      map(infos => infos.filter(info => info.icao === term))
+    );
+  }
+
   getInfos(icaos: string[]): Promise<Map<string, AirportInfo>> {
 
     return this.http.get<AirportInfo[]>('assets/allAirportInfo.json').pipe(

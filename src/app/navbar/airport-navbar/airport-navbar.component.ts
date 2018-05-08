@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AirportInfo } from '../../model/airport-info';
+import { AirportInfoService } from '../../services/airport-info.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'monapt-airport-navbar',
@@ -8,12 +11,21 @@ import { AirportInfo } from '../../model/airport-info';
 })
 export class AirportNavbarComponent implements OnInit {
 
+  searchItem: any;
+
   @Input()
   selectedAirport: AirportInfo;
 
-  constructor() { }
+  constructor(private airportInfoService: AirportInfoService,
+              private router: Router) {
+
+  }
 
   ngOnInit() {
   }
 
+  navigate() {
+    this.router.navigate(['/detail', this.searchItem, 'trafic'])
+    this.searchItem = '';
+  }
 }
