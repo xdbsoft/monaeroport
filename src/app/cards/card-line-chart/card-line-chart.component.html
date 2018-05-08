@@ -1,0 +1,11 @@
+<monapt-card [title]="title" iconClasses="fas fa-chart-line">
+  <div>
+    <canvas baseChart
+        [datasets]="datasets"
+        [labels]="labels"
+        [options]="config.options"
+        [chartType]="config.chartType"
+        [legend]="config.legend"
+    ></canvas>
+  </div>
+</monapt-card>

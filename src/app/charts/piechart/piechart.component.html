@@ -1,0 +1,17 @@
+<div style="display: flex; flex-direction: row;">
+  <div>
+    <canvas baseChart
+      [data]="values"
+      [options]="options"
+      [labels]="labels"
+      [colors]="chartColors()"
+      [chartType]="chartType"
+      [legend]="legend"
+    ></canvas>
+  </div>
+  <div style="flex-grow: 1;">
+    <div style="height:100%; display: flex; flex-direction: column; justify-content: space-evenly;">
+      <p *ngFor="let c of caption()"><i [style.color]="c.color">label</i> {{c.label}}:  {{c.value}}</p>
+    </div>
+  </div>
+</div>
