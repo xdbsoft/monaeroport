@@ -1,0 +1,1 @@
+{"dimensions":["year","month","direction","dest_icao","dest_country","dest_zone","dest_range"],"points":[[2006,6,"D","EKBI","DK","I","MC"]],"fields":["flights","pax"],"data":[[12,544]]}

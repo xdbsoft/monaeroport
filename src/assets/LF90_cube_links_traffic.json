@@ -1,0 +1,1 @@
+{"dimensions":["year","month","direction","dest_icao","dest_country","dest_zone","dest_range"],"points":[[1997,1,"D","LFMN","FR","M","CC"],[1997,1,"A","LFMN","FR","M","CC"],[2003,2,"D","LFMN","FR","M","CC"],[2005,4,"D","LFMN","FR","M","CC"]],"fields":["flights","pax"],"data":[[1301,3050],[1323,3054],[245,552],[219,1115]]}
