@@ -5,13 +5,13 @@
   </span>
   <div class="btn-group" role="group" aria-label="Basic example">
     <button type="button" [routerLink]="['trafic']" routerLinkActive="active" class="btn btn-outline-light"><i class="fas fa-plane"></i> Trafic</button>
-    <button type="button" disabled [routerLink]="['retards']" routerLinkActive="active" class="btn btn-outline-light"><i class="fas fa-clock"></i> Retards</button>
+    <button type="button" [routerLink]="['retards']" routerLinkActive="active" class="btn btn-outline-light"><i class="fas fa-clock"></i> Retards</button>
     <button type="button" disabled [routerLink]="['emissions']" routerLinkActive="active" class="btn btn-outline-light"><i class="fas fa-cloud"></i> Emissions</button>
   </div>
 
   <form class="form-inline">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchItem"  name="searchItem">
-    <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="navigate($event)"><i class="fas fa-search"></i></button>
+    <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="navigate()"><i class="fas fa-search"></i></button>
   </form>
   <button disabled class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-info"></i></button>
 </nav>

@@ -2,27 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { AirportTraffic } from '../model/airport-traffic';
-import { OlapFile } from '../model/olap-file';
+
+import * as olap from 'olap-cube';
 
 @Injectable()
 export class AirportTrafficService {
 
   constructor(private http: HttpClient) { }
 
-  getTraffic(icao: string, year: number): Promise<OlapFile> {
+  getTraffic(icao: string): Promise<olap.model.Table> {
 
     if (icao.length != 4) {
-      return new Promise<OlapFile>( (resolve, reject) => {
+      return new Promise<olap.model.Table>( (resolve, reject) => {
         reject("Invalid ICAO code");
       });
     }
 
-    if (year < 1990) {
-      return new Promise<OlapFile>( (resolve, reject) => {
-        reject("Invalid year");
-      });
-    }
-    return this.http.get<OlapFile>('assets/'+icao+'_'+year+'_traffic.json').toPromise();
+    return this.http.get<any>('assets/'+icao+'_cube_links_traffic.json').toPromise().then(v => new olap.model.Table(v));
   }
 
 }

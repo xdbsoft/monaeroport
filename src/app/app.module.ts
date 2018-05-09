@@ -28,6 +28,7 @@ import { CardRawDataComponent } from './cards/card-raw-data/card-raw-data.compon
 import { CardComponent } from './cards/card/card.component';
 import { AirportTrafficService } from './services/airport-traffic.service';
 import { CardLineChartComponent } from './cards/card-line-chart/card-line-chart.component';
+import { AirportDelayService } from './services/airport-delay.service';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { CardLineChartComponent } from './cards/card-line-chart/card-line-chart.
   providers: [
     AirportInfoService, 
     AirportTrafficService,
+    AirportDelayService,
     SelectedAirportService
   ],
   bootstrap: [AppComponent]

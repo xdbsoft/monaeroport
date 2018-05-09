@@ -5,7 +5,6 @@ import { AirportInfo } from '../../model/airport-info';
 import { SelectedAirportService } from '../../services/selected-airport.service';
 
 import * as olap from 'olap-cube';
-import { OlapFile } from '../../model/olap-file';
 import { AirportTrafficService } from '../../services/airport-traffic.service';
 import { AirportInfoService } from '../../services/airport-info.service';
 
@@ -20,7 +19,6 @@ export class AirportTrafficComponent implements OnInit {
 
   selectedAirport$: Observable<AirportInfo>;
   selectedAirport: AirportInfo;
-  airporTrafficCube: OlapFile;
 
   labels: string[] = ['Année','Mois','Direction','Escale','Pays','Zone','Faisceau','Nombre de vols','Nombre de passagers'];
   
@@ -60,19 +58,18 @@ export class AirportTrafficComponent implements OnInit {
 
   setupCube(icao: string, year: number) {
 
-    this.airportTrafficService.getTraffic(icao, year).then(olapFile => {
+    this.airportTrafficService.getTraffic(icao).then(cube => {
 
-      console.log("Traffic retrieved", icao, year, olapFile.table.rows.length)
-
-      this.cube = new olap.model.Table(olapFile.cube);
-      
-      this.cube = this.cube.addRows(olapFile.table);
-
+      console.log("Traffic retrieved", icao, year, cube.points.length)
+      this.cube = cube;
       console.log(this.cube);
 
       this.setupMap();
+      console.log('setupMap done');
       this.setupKeyFigures();
+      console.log('setupKeyFigures done');
       this.setupEvolution();
+      console.log('setupEvolution done');
 
     })
     .catch(reason => {
@@ -83,7 +80,7 @@ export class AirportTrafficComponent implements OnInit {
   setupKeyFigures() {
     const keyFigures = this.cube
       .slice('year', this.year)
-      .rollup('range', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
+      .rollup('dest_range', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
     ;
 
     this.keyFiguresValues = [0,0,0];
@@ -103,64 +100,31 @@ export class AirportTrafficComponent implements OnInit {
 
   setupEvolution() {
 
-    const yearlyFigures = this.cube
-      .slice('year', this.year)
-      .rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
-    ;
-    console.log('yearCube',this.year, yearlyFigures);
-
-    const copy = [...this.evolutionDatasets];
-    this.evolutionDatasets = [];
-    copy.forEach(c => {
-      if (c.label === this.year) {
-        this.evolutionDatasets.push({
-          label: this.year,
-          data: yearlyFigures.data.map(v => v[0]),
-        });
-      } else {
-        this.evolutionDatasets.push(c);
-      }
-    });
-
-
-    const years = [this.year-1, this.year-2];
+    const years = [this.year, this.year-1, this.year-2];
 
     years.forEach(year => {
-
-      this.airportTrafficService.getTraffic(this.selectedAirport.icao, year).then(olapFile => {
-
-        console.log("Traffic retrieved", this.selectedAirport.icao, year, olapFile.table.rows.length)
   
-        const cubeDef = new olap.model.Table(olapFile.cube);
-        const yearCube = cubeDef.addRows(olapFile.table);
-  
-        const yearlyFigures = yearCube
-          .slice('year', year)
-          .rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
-        ;
+      const yearlyFigures = this.cube
+        .slice('year', year)
+        .rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
+      ;
 
-        console.log('yearCube',year, yearCube, yearlyFigures);
+      console.log('yearCube',year, yearlyFigures);
 
 
-        const copy = [...this.evolutionDatasets];
-        this.evolutionDatasets = [];
-        copy.forEach(c => {
-          if (c.label === year) {
-            this.evolutionDatasets.push({
-              label: year,
-              data: yearlyFigures.data.map(v => v[0]),
-            });
-          } else {
-            this.evolutionDatasets.push(c);
-          }
-        });  
-      })
-      .catch(reason => {
-        console.log("getTraffic failed", this.selectedAirport.icao, reason)
-      });
-
+      const copy = [...this.evolutionDatasets];
+      this.evolutionDatasets = [];
+      copy.forEach(c => {
+        if (c.label === year) {
+          this.evolutionDatasets.push({
+            label: year,
+            data: yearlyFigures.data.map(v => v[0]),
+          });
+        } else {
+          this.evolutionDatasets.push(c);
+        }
+      });  
     });
-
   }
 
   color(a: AirportInfo): string {
@@ -196,7 +160,7 @@ export class AirportTrafficComponent implements OnInit {
 
   setupMap() {
 
-    const destinations = this.cube.slice('year', this.year).rollup('icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
+    const destinations = this.cube.slice('year', this.year).rollup('dest_icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
     const total = destinations.reduce((s, v) => s + v[1], 0);
     console.log('destinations', this.year, total, destinations);
 
@@ -232,11 +196,6 @@ export class AirportTrafficComponent implements OnInit {
 
       });
     });
-    
-  
-    
-
-
   }
 
   ngOnInit() {
