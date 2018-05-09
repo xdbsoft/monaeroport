@@ -1,1 +1,0 @@
-{"cube":{"dimensions":["year","month","direction","icao","country","zone","range"],"fields":["flights","paxs"]},"table":{"header":["year","month","direction","icao","country","zone","range","flights","paxs"],"rows":[[2012,6,"D","LFKJ","FR","M","CC",5,756],[2012,7,"D","LFKJ","FR","M","CC",4,518],[2012,8,"D","LFKJ","FR","M","CC",4,664],[2012,9,"D","LFKJ","FR","M","CC",5,681]]}}
