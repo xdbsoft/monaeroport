@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { AirportInfo } from '../../model/airport-info';
 import { SelectedAirportService } from '../../services/selected-airport.service';

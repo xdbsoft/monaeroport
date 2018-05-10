@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 
 import { AirportInfoService } from './airport-info.service';
 import { AirportInfo } from '../model/airport-info';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class SelectedAirportService {
