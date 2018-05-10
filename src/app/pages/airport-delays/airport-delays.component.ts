@@ -9,12 +9,19 @@ import * as olap from 'olap-cube';
 import { AirportDelayService } from '../../services/airport-delay.service';
 import { AirportInfoService } from '../../services/airport-info.service';
 
+export interface IAlert {
+  type: string;
+  message: string;
+}
+
 @Component({
   selector: 'monapt-airport-delays',
   templateUrl: './airport-delays.component.html',
   styleUrls: ['./airport-delays.component.css']
 })
 export class AirportDelaysComponent implements OnInit {
+
+  alert: IAlert;
 
   year: number = 2016;
 
@@ -50,11 +57,10 @@ export class AirportDelaysComponent implements OnInit {
       this.setupCube(this.selectedAirport.icao, this.year);
 
     });
+  }
 
-    this.cube = new olap.model.Table({
-      dimensions: [],
-      fields: [],
-    });
+  closeAlert() {
+    this.alert = null;
   }
 
   setupCube(icao: string, year: number) {
@@ -63,11 +69,14 @@ export class AirportDelaysComponent implements OnInit {
 
       console.log("Delays retrieved", icao, year, cube.points.length)
       this.cube = cube;
+      this.alert = null;
 
       this.setupEvolution();
 
     })
     .catch(reason => {
+      this.alert = {type: 'warning', message: 'Aucune information de retard n\'a pu être chargée.'}
+      this.cube = null
       console.log("getDelays failed", icao, reason)
     });
   }

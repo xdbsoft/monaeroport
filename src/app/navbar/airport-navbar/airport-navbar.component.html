@@ -10,7 +10,7 @@
   </div>
 
   <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchItem" 
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchItem" [(ngModel)]="searchItem"
     [ngbTypeahead]="search" [resultFormatter]="format" [inputFormatter]="format" [editable]="false" (selectItem)="navigateTo($event.item)">
   </form>
   <button disabled class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-info"></i></button>

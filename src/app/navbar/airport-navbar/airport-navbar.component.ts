@@ -12,6 +12,8 @@ import { debounceTime, distinctUntilChanged, map, switchMap, catchError } from '
 })
 export class AirportNavbarComponent implements OnInit {
 
+  searchItem: any;
+
   @Input()
   selectedAirport: AirportInfo;
 
@@ -22,6 +24,9 @@ export class AirportNavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.params.subscribe(v => {
+      this.searchItem = null
+    })
   }
 
   format(o: any) {

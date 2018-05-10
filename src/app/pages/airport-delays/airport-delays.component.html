@@ -1,4 +1,8 @@
-<div class="container-fluid" style="margin-top:1em;">
+<div class="container" style="margin-top: 1em;" *ngIf="alert">
+    <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
+</div>
+
+<div class="container-fluid" style="margin-top:1em;" *ngIf="cube">
   <div class="card-columns">
 
     <monapt-card-line-chart title="Evolution du retard moyen au départ (en minutes)" [labels]="evolutionLabels" [datasets]="evolutionDatasets">
