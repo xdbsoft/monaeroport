@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AirportInfo } from '../model/airport-info';
@@ -20,8 +20,23 @@ export class AirportInfoService {
 
   search(term: string): Observable<AirportInfo[]> {
 
+    term = term.toLowerCase().trim();
+    if (term.indexOf("-") >= 0) {
+      term = term.substr(0, term.indexOf("-"))
+    }
+
+    if (term.length == 0) {
+      return of([]);
+    }
+
     return this.http.get<AirportInfo[]>('assets/airportInfo.json').pipe(
-      map(infos => infos.filter(info => info.icao === term))
+      map(infos => {
+        return infos.filter(info => {
+          const icaoMatch = info.icao.toLowerCase().startsWith(term)
+          const nameMatch = info.name.toLowerCase().indexOf(term) >= 0;
+          return icaoMatch || nameMatch;
+        } ).slice(0, 10)
+      })
     );
   }
 

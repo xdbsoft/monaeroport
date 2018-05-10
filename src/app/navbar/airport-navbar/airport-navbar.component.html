@@ -10,8 +10,8 @@
   </div>
 
   <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchItem"  name="searchItem">
-    <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="navigate()"><i class="fas fa-search"></i></button>
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchItem" 
+    [ngbTypeahead]="search" [resultFormatter]="format" [inputFormatter]="format" [editable]="false" (selectItem)="navigateTo($event.item)">
   </form>
   <button disabled class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-info"></i></button>
 </nav>
