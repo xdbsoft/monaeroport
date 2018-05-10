@@ -90,7 +90,7 @@ export class AirportDelaysComponent implements OnInit {
 
   setupEvolution() {
 
-    const years = [this.year, this.year-1, this.year-2];
+    const years = [this.year-2, this.year-1, this.year];
 
     this.evolutionDatasets = [];
     this.evolutionDatasetsArr = [];
