@@ -9,9 +9,6 @@
     <button type="button" disabled [routerLink]="['emissions']" routerLinkActive="active" class="btn btn-outline-light"><i class="fas fa-cloud"></i> Emissions</button>
   </div>
 
-  <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searchItem" [(ngModel)]="searchItem"
-    [ngbTypeahead]="search" [resultFormatter]="format" [inputFormatter]="format" [editable]="false" (selectItem)="navigateTo($event.item)">
-  </form>
+  <monapt-search></monapt-search>
   <button disabled class="btn btn-outline-light my-2 my-sm-0" type="submit"><i class="fas fa-info"></i></button>
 </nav>

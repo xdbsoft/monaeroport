@@ -29,6 +29,7 @@ import { CardComponent } from './cards/card/card.component';
 import { AirportTrafficService } from './services/airport-traffic.service';
 import { CardLineChartComponent } from './cards/card-line-chart/card-line-chart.component';
 import { AirportDelayService } from './services/airport-delay.service';
+import { SearchComponent } from './navbar/search/search.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { AirportDelayService } from './services/airport-delay.service';
     NotFoundComponent,
     CardRawDataComponent,
     CardComponent,
-    CardLineChartComponent
+    CardLineChartComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

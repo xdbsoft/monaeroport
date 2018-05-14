@@ -20,7 +20,7 @@ const routes: Routes = [
   },
   { path: 'apercu', component: HomeComponent },
   { path: 'info', component: InfoComponent },
-  { path: '', redirectTo: '/detail/LFMN/trafic', pathMatch: 'full' },
+  { path: '', redirectTo: '/apercu', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];
 

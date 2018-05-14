@@ -1,6 +1,13 @@
 <monapt-navbar></monapt-navbar>
-<p>
-  home works!
 
-  <a [routerLink]="['/','detail','LFBO','trafic']">LFBO</a>
-</p>
+
+<div class="card">
+  <div class="card-body">
+    <div style="width:100%; height: 668px">
+      <monapt-leaflet 
+        [center]="center" 
+        [features]="features">
+      </monapt-leaflet>
+    </div>    
+  </div>
+</div>

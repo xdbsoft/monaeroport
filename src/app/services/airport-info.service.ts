@@ -17,6 +17,10 @@ export class AirportInfoService {
       map(infos => infos.find(info => info.icao === icao)));
 
   }
+  
+  getAllInfo(): Observable<AirportInfo[]> {
+    return this.http.get<AirportInfo[]>('assets/airportInfo.json');
+  }
 
   search(term: string): Observable<AirportInfo[]> {
 

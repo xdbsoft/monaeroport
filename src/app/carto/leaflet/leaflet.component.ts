@@ -64,6 +64,10 @@ export class LeafletComponent implements OnInit, OnChanges {
 
         layer.bindPopup((a: any) => {
           const f = a.feature;
+          if (f.properties.link) {
+            return `<h5>${f.properties.title} <a href="${f.properties.link}"><i class="fas fa-external-link-alt"></i></a></h5>
+                    <p>${f.properties.content}</p>`;  
+          }
           return `<h5>${f.properties.title}</h5>
                   <p>${f.properties.content}</p>`;
 

@@ -1,0 +1,4 @@
+  <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher" name="searchItem" [(ngModel)]="searchItem"
+    [ngbTypeahead]="search" [resultFormatter]="format" [inputFormatter]="format" [editable]="false" (selectItem)="navigateTo($event.item)">
+  </form>
