@@ -18,9 +18,11 @@ export class SelectedYearService {
     return this.selectedYear$.asObservable();
   }
 
-  setYear(year: number) {
+  setSelected(year: number) {
     
     this.selectedYear = year;
+    
+    console.log("Emitting year", year, this.selectedYear);
     this.selectedYear$.next(this.selectedYear);
   }
 

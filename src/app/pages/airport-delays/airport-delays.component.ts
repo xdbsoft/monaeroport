@@ -57,7 +57,7 @@ export class AirportDelaysComponent implements OnInit {
       console.log("Selected airport updated", v)
 
       this.selectedAirport = v;
-      this.setupCube(this.selectedAirport.icao, this.year);
+      this.setupCube(this.selectedAirport.icao);
 
     });
 
@@ -75,11 +75,11 @@ export class AirportDelaysComponent implements OnInit {
     this.alert = null;
   }
 
-  setupCube(icao: string, year: number) {
+  setupCube(icao: string) {
 
     this.airportDelayService.getDelays(icao).then(cube => {
 
-      console.log("Delays retrieved", icao, year, cube.points.length)
+      console.log("Delays retrieved", icao, cube.points.length)
       this.cube = cube;
       this.alert = null;
 
@@ -110,6 +110,9 @@ export class AirportDelaysComponent implements OnInit {
   }
 
   setupEvolution() {
+    if (!this.cube || !this.year) {
+      return;
+    }
 
     const years = [this.year-2, this.year-1, this.year];
 

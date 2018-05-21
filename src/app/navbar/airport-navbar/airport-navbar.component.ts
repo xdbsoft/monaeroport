@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { AirportInfo } from '../../model/airport-info';
 import { AirportInfoService } from '../../services/airport-info.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,11 +15,27 @@ export class AirportNavbarComponent implements OnInit {
   @Input()
   selectedAirport: AirportInfo;
 
-  constructor() {
+  @Input()
+  selectedYear: number;
 
+  @Output()
+  yearChange: EventEmitter<number>;
+
+  constructor() {
+    this.yearChange = new EventEmitter<number>();
   }
 
   ngOnInit() {
+  }
+
+  decrementYear() {
+    this.selectedYear = this.selectedYear - 1;
+    this.yearChange.emit(this.selectedYear);
+  }
+
+  incrementYear() {
+    this.selectedYear = this.selectedYear + 1;
+    this.yearChange.emit(this.selectedYear);
   }
 
 }

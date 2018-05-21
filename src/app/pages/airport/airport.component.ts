@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AirportInfo } from '../../model/airport-info';
 import { SelectedAirportService } from '../../services/selected-airport.service';
+import { SelectedYearService } from '../../services/selected-year.service';
 
 @Component({
   selector: 'monapt-airport',
@@ -12,10 +13,13 @@ import { SelectedAirportService } from '../../services/selected-airport.service'
 export class AirportComponent implements OnInit {
 
   selectedAirport$: Observable<AirportInfo>;
+  selectedYear$: Observable<number>;
 
   constructor(private selectedAirportService: SelectedAirportService,
+              private selectedYearService: SelectedYearService,
               private activatedRoute: ActivatedRoute) {
     this.selectedAirport$ = this.selectedAirportService.getInfos();
+    this.selectedYear$ = this.selectedYearService.getYear();
   }
 
   ngOnInit() {
@@ -25,4 +29,10 @@ export class AirportComponent implements OnInit {
     });
   }
 
+  onYearChange(newYear) {
+    console.log("onYearChange", newYear)
+    this.selectedYearService.setSelected(newYear);
+  }
+
 }
+;

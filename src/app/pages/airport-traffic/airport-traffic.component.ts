@@ -25,6 +25,7 @@ export class AirportTrafficComponent implements OnInit {
   labels: string[] = ['Année','Mois','Direction','Escale','Pays','Zone','Faisceau','Nombre de vols','Nombre de passagers'];
   
   cube: olap.model.Table;
+  yearCube: olap.model.Table;
   
   keyFiguresLabels: string[] = ['Court courriers','Moyen courriers','Long courriers'];
   keyFiguresValues: number[] = [];
@@ -59,17 +60,26 @@ export class AirportTrafficComponent implements OnInit {
       console.log("Selected year updated", v)
       
       this.year = v;
-      
-      this.setupMap();
-      console.log('setupMap done');
-      this.setupKeyFigures();
-      console.log('setupKeyFigures done');
-      this.setupEvolution();
-      console.log('setupEvolution done');
 
+      if (this.cube) {
+        
+        this.yearCube = this.cube.slice('year', this.year);
+        
+        this.setupMap();
+        console.log('setupMap done');
+        this.setupKeyFigures();
+        console.log('setupKeyFigures done');
+        this.setupEvolution();
+        console.log('setupEvolution done');
+
+      }
     });
 
     this.cube = new olap.model.Table({
+      dimensions: [],
+      fields: [],
+    });
+    this.yearCube = new olap.model.Table({
       dimensions: [],
       fields: [],
     });
@@ -82,6 +92,7 @@ export class AirportTrafficComponent implements OnInit {
       console.log("Traffic retrieved", icao, this.year, cube.points.length)
       this.cube = cube;
       console.log(this.cube);
+      this.yearCube = this.cube.slice('year', this.year);
 
       this.setupMap();
       console.log('setupMap done');
@@ -97,8 +108,11 @@ export class AirportTrafficComponent implements OnInit {
   }
 
   setupKeyFigures() {
-    const keyFigures = this.cube
-      .slice('year', this.year)
+    if (!this.cube) {
+      return;
+    }
+
+    const keyFigures = this.yearCube
       .rollup('dest_range', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
     ;
 
@@ -118,6 +132,9 @@ export class AirportTrafficComponent implements OnInit {
   }
 
   setupEvolution() {
+    if (!this.cube) {
+      return;
+    }
 
     const years = [this.year-2, this.year-1, this.year];
 
@@ -125,10 +142,12 @@ export class AirportTrafficComponent implements OnInit {
 
     years.forEach(year => {
   
-      const yearlyFigures = this.cube
-        .slice('year', year)
-        .rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
-      ;
+      let cube = this.yearCube;
+      if (year !== this.year) {
+        cube = this.cube.slice('year', year);
+      }
+
+      const yearlyFigures = cube.rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0]);
 
       console.log('yearCube',year, yearlyFigures);
 
@@ -172,8 +191,11 @@ export class AirportTrafficComponent implements OnInit {
   }
 
   setupMap() {
+    if (!this.cube) {
+      return;
+    }
 
-    const destinations = this.cube.slice('year', this.year).rollup('dest_icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
+    const destinations = this.yearCube.rollup('dest_icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
     const total = destinations.reduce((s, v) => s + v[1], 0);
     console.log('destinations', this.year, total, destinations);
 
