@@ -46,8 +46,7 @@ export class AirportDelaysComponent implements OnInit {
   ];
 
   constructor(private selectedAirportService: SelectedAirportService, private selectedYearService: SelectedYearService, 
-    private airportDelayService: AirportDelayService,
-    private airportInfoService: AirportInfoService) {
+    private airportDelayService: AirportDelayService) {
 
     this.selectedAirport$ = this.selectedAirportService.getInfos();
     this.selectedYear$ = this.selectedYearService.getYear();

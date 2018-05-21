@@ -1,3 +1,31 @@
-<p>
-  airport-emissions works!
-</p>
+<div class="container" style="margin-top: 1em;" *ngIf="alert">
+    <ngb-alert [type]="alert.type" (close)="closeAlert()">{{ alert.message }}</ngb-alert>
+</div>
+
+<div class="container-fluid" style="margin-top:1em;" *ngIf="cube">
+
+    <div class="row">
+      <div class="col-lg-6">
+        <monapt-card-line-chart title="Evolution des émissions de CO2 (en kt)" [labels]="evolutionLabels" [datasets]="evolCo2Datasets">
+        </monapt-card-line-chart>
+        
+        <monapt-card-line-chart title="Evolution des émissions de NOX (en t)" [labels]="evolutionLabels" [datasets]="evolNoxDatasets">
+        </monapt-card-line-chart>
+      </div>
+      <div class="col-lg-6">
+        <monapt-card-line-chart title="Evolution des émissions de COVNM (en kt)" [labels]="evolutionLabels" [datasets]="evolCovnmDatasets">
+        </monapt-card-line-chart>
+        
+        <monapt-card-line-chart title="Evolution des émissions de TSP (en t)" [labels]="evolutionLabels" [datasets]="evolTspDatasets">
+        </monapt-card-line-chart>
+      </div>
+    </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <monapt-card-raw-data title="Données brutes" [labels]="labels" [data]="cube.rows">
+      </monapt-card-raw-data>
+    </div>
+  </div>
+
+</div>
