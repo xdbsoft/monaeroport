@@ -1,12 +1,13 @@
 <div class="container-fluid" style="margin-top:1em;">
-    <div class="card-columns">
-
+  <div class="row">
+    <div class="col-lg-6">
       <monapt-card-pie-chart title="Répartition des vols" suffix="vols en 2016" [labels]="keyFiguresLabels" [data]="keyFiguresValues"  >
       </monapt-card-pie-chart>
 
       <monapt-card-map [selectedAirport]="selectedAirport$ | async" title="Principales destinations" [features]="mapFeatures" >
       </monapt-card-map>
-
+    </div>
+    <div class="col-lg-6">
       <!--
       <monapt-card title="Configuration" iconClasses="fas fa-cogs">
         Année: {{year}}
@@ -15,8 +16,13 @@
       <monapt-card-line-chart title="Evolution du traffic" [labels]="evolutionLabels" [datasets]="evolutionDatasets">
       </monapt-card-line-chart>
 
-      <monapt-card-raw-data title="Données brutes" [labels]="labels" [data]="cube.rows">
-      </monapt-card-raw-data>
 
     </div>
   </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <monapt-card-raw-data title="Données brutes" [labels]="labels" [data]="cube.rows">
+      </monapt-card-raw-data>
+    </div>
+  </div>
+</div>
