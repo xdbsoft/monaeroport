@@ -30,6 +30,7 @@ import { AirportTrafficService } from './services/airport-traffic.service';
 import { CardLineChartComponent } from './cards/card-line-chart/card-line-chart.component';
 import { AirportDelayService } from './services/airport-delay.service';
 import { SearchComponent } from './navbar/search/search.component';
+import { SelectedYearService } from './services/selected-year.service';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { SearchComponent } from './navbar/search/search.component';
     AirportInfoService, 
     AirportTrafficService,
     AirportDelayService,
-    SelectedAirportService
+    SelectedAirportService,
+    SelectedYearService
   ],
   bootstrap: [AppComponent]
 })

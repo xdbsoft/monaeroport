@@ -1,7 +1,7 @@
 <div class="container-fluid" style="margin-top:1em;">
   <div class="row">
     <div class="col-lg-6">
-      <monapt-card-pie-chart title="Répartition des vols" suffix="vols en 2016" [labels]="keyFiguresLabels" [data]="keyFiguresValues"  >
+      <monapt-card-pie-chart title="Répartition des vols" [suffix]="getChartSuffix()" [labels]="keyFiguresLabels" [data]="keyFiguresValues"  >
       </monapt-card-pie-chart>
 
       <monapt-card-map [selectedAirport]="selectedAirport$ | async" title="Principales destinations" [features]="mapFeatures" >

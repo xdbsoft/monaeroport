@@ -7,6 +7,7 @@ import { SelectedAirportService } from '../../services/selected-airport.service'
 import * as olap from 'olap-cube';
 import { AirportTrafficService } from '../../services/airport-traffic.service';
 import { AirportInfoService } from '../../services/airport-info.service';
+import { SelectedYearService } from '../../services/selected-year.service';
 
 @Component({
   selector: 'monapt-airport-traffic',
@@ -15,6 +16,7 @@ import { AirportInfoService } from '../../services/airport-info.service';
 })
 export class AirportTrafficComponent implements OnInit {
 
+  selectedYear$: Observable<number>;
   year: number = 2016;
 
   selectedAirport$: Observable<AirportInfo>;
@@ -37,16 +39,33 @@ export class AirportTrafficComponent implements OnInit {
   mapFeatures: any[] = [];
 
   constructor(private selectedAirportService: SelectedAirportService, 
+              private selectedYearService: SelectedYearService, 
               private airportTrafficService: AirportTrafficService,
               private airportInfoService: AirportInfoService) {
     this.selectedAirport$ = this.selectedAirportService.getInfos();
+    this.selectedYear$ = this.selectedYearService.getYear();
 
     this.selectedAirport$.subscribe( v => {
 
       console.log("Selected airport updated", v)
       
       this.selectedAirport = v;
-      this.setupCube(this.selectedAirport.icao, this.year);
+      this.setupCube(this.selectedAirport.icao);
+
+    });
+
+    this.selectedYear$.subscribe( v => {
+
+      console.log("Selected year updated", v)
+      
+      this.year = v;
+      
+      this.setupMap();
+      console.log('setupMap done');
+      this.setupKeyFigures();
+      console.log('setupKeyFigures done');
+      this.setupEvolution();
+      console.log('setupEvolution done');
 
     });
 
@@ -56,11 +75,11 @@ export class AirportTrafficComponent implements OnInit {
     });
   }
 
-  setupCube(icao: string, year: number) {
+  setupCube(icao: string) {
 
     this.airportTrafficService.getTraffic(icao).then(cube => {
 
-      console.log("Traffic retrieved", icao, year, cube.points.length)
+      console.log("Traffic retrieved", icao, this.year, cube.points.length)
       this.cube = cube;
       console.log(this.cube);
 
@@ -100,7 +119,9 @@ export class AirportTrafficComponent implements OnInit {
 
   setupEvolution() {
 
-    const years = [this.year, this.year-1, this.year-2];
+    const years = [this.year-2, this.year-1, this.year];
+
+    this.evolutionDatasets = [];
 
     years.forEach(year => {
   
@@ -111,19 +132,11 @@ export class AirportTrafficComponent implements OnInit {
 
       console.log('yearCube',year, yearlyFigures);
 
-
-      const copy = [...this.evolutionDatasets];
-      this.evolutionDatasets = [];
-      copy.forEach(c => {
-        if (c.label === year) {
-          this.evolutionDatasets.push({
-            label: year,
-            data: yearlyFigures.data.map(v => v[0]),
-          });
-        } else {
-          this.evolutionDatasets.push(c);
-        }
-      });  
+      this.evolutionDatasets.push({
+        label: year,
+        data: yearlyFigures.data.map(v => v[0]),
+      });
+      
     });
   }
 
@@ -199,6 +212,10 @@ export class AirportTrafficComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getChartSuffix() {
+    return 'vols en ' + this.year;
   }
 
 }

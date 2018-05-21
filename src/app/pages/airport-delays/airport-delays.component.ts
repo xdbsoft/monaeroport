@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 import { AirportInfo } from '../../model/airport-info';
 import { SelectedAirportService } from '../../services/selected-airport.service';
+import { SelectedYearService } from '../../services/selected-year.service';
 
 import * as olap from 'olap-cube';
 
@@ -23,6 +24,7 @@ export class AirportDelaysComponent implements OnInit {
 
   alert: IAlert;
 
+  selectedYear$: Observable<number>;
   year: number = 2016;
 
   selectedAirport$: Observable<AirportInfo>;
@@ -43,11 +45,12 @@ export class AirportDelaysComponent implements OnInit {
     {data: [], label: this.year}
   ];
 
-  constructor(private selectedAirportService: SelectedAirportService, 
+  constructor(private selectedAirportService: SelectedAirportService, private selectedYearService: SelectedYearService, 
     private airportDelayService: AirportDelayService,
     private airportInfoService: AirportInfoService) {
 
     this.selectedAirport$ = this.selectedAirportService.getInfos();
+    this.selectedYear$ = this.selectedYearService.getYear();
 
     this.selectedAirport$.subscribe( v => {
 
@@ -55,6 +58,15 @@ export class AirportDelaysComponent implements OnInit {
 
       this.selectedAirport = v;
       this.setupCube(this.selectedAirport.icao, this.year);
+
+    });
+
+    this.selectedYear$.subscribe( v => {
+
+      console.log("Selected year updated", v)
+
+      this.year = v;
+      this.setupEvolution();
 
     });
   }
