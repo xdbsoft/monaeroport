@@ -30,6 +30,7 @@ export class AirportEmissionsComponent implements OnInit {
 
   labels: string[] = ['Année','Mois','Zone','Faisceau','Catégorie','Nombre de mouvements','Nombre de passagers','Nombre de passagers équivalents','CO2 (kt)','NOX (t)','COVNM (t)', 'TSP (t)'];
   cube: olap.model.Table;
+  yearCube: olap.model.Table;
 
   evolutionLabels: string[] = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   evolCo2Datasets = [
@@ -74,6 +75,9 @@ export class AirportEmissionsComponent implements OnInit {
       console.log("Selected year updated", v)
 
       this.year = v;
+      if (this.cube) { 
+        this.yearCube = this.cube.slice('year', this.year);
+      }
       this.setupEvolution();
 
     });
@@ -92,6 +96,9 @@ export class AirportEmissionsComponent implements OnInit {
 
       console.log("Emissions retrieved", icao, cube.points.length)
       this.cube = cube;
+      if (this.cube) {
+        this.yearCube = this.cube.slice('year', this.year);
+      }
       this.alert = null;
 
       this.setupEvolution();
@@ -100,6 +107,7 @@ export class AirportEmissionsComponent implements OnInit {
     .catch(reason => {
       this.alert = {type: 'warning', message: 'Aucune information d\'émission n\'a pu être chargée.'}
       this.cube = null
+      this.yearCube = null;
       console.log("getEmissions failed", icao, reason)
     });
   }

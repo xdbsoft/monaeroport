@@ -32,6 +32,7 @@ import { AirportDelayService } from './services/airport-delay.service';
 import { SearchComponent } from './navbar/search/search.component';
 import { SelectedYearService } from './services/selected-year.service';
 import { AirportEmissionsService } from './services/airport-emissions.service';
+import { DynpiechartComponent } from './charts/dynpiechart/dynpiechart.component';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { AirportEmissionsService } from './services/airport-emissions.service';
     CardRawDataComponent,
     CardComponent,
     CardLineChartComponent,
-    SearchComponent
+    SearchComponent,
+    DynpiechartComponent
   ],
   imports: [
     BrowserModule,

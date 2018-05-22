@@ -6,11 +6,19 @@
 
     <div class="row">
       <div class="col-lg-6">
+
         <monapt-card-line-chart title="Evolution des émissions de CO2 (en kt)" [labels]="evolutionLabels" [datasets]="evolCo2Datasets">
         </monapt-card-line-chart>
         
         <monapt-card-line-chart title="Evolution des émissions de NOX (en t)" [labels]="evolutionLabels" [datasets]="evolNoxDatasets">
         </monapt-card-line-chart>
+
+        <monapt-card title="Graphique personnalisé" iconClasses="fas fa-chart-pie">
+          <div>
+            <monapt-dynpiechart [cube]="yearCube"></monapt-dynpiechart>
+          </div>
+        </monapt-card>
+        
       </div>
       <div class="col-lg-6">
         <monapt-card-line-chart title="Evolution des émissions de COVNM (en kt)" [labels]="evolutionLabels" [datasets]="evolCovnmDatasets">

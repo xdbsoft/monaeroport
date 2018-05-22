@@ -1,0 +1,53 @@
+<!-- <table class="table table-sm">
+  <tbody>
+    <tr *ngFor="let r of rawdata.rows">
+      <td *ngFor="let v of r">{{v}}</td>
+    </tr>
+  </tbody>
+</table> -->
+
+<p *ngIf="!cube.data.length">Aucune donnée disponible</p>
+
+<form *ngIf="cube.data.length">
+
+    <!-- <p>
+      Filters:
+    </p>
+    <ul>
+      <li *ngFor="let f of filters">{{cube.dimensions[f[0]]}}: {{f[1]}}</li>
+    </ul> -->
+    
+  <div class="form-group row">
+    <label for="selectDim" class="col-sm-4 col-form-label">Grouper en fonction de :</label>
+    <div class="col-sm-8">
+        <select class="form-control" [(ngModel)]="dimForRollup" (ngModelChange)="updateGraph($event)" id="selectDim" name="selectDim">
+            <option *ngFor="let d of cube.dimensions; let i = index" [value]="i">{{d}}</option>
+        </select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="selectField" class="col-sm-4 col-form-label">Afficher :</label>
+    <div class="col-sm-8">
+        <select class="form-control" [(ngModel)]="fieldForRollup" (ngModelChange)="updateGraph($event)" id="selectField" name="selectField">
+            <option *ngFor="let f of cube.fields; let i = index"  [value]="i">{{f}}</option>
+        </select>
+    </div>
+  </div>
+</form>
+
+<div style="display: flex; flex-direction: row;" *ngIf="cube.data.length">
+    <div>
+        <canvas baseChart
+            [data]="data"
+            [options]="config.options"
+            [labels]="labels"
+            [chartType]="config.chartType"
+            [legend]="config.legend"
+        ></canvas>
+    </div>
+    <div style="flex-grow: 1;">
+        <div style="height:100%; display: flex; flex-direction: column; justify-content: space-evenly;">
+                <p *ngFor="let c of legend"><i class="fas fa-tag" [style.color]="c.color"></i> {{c.label}}:  {{c.value}}</p>
+        </div>
+    </div>
+</div>
