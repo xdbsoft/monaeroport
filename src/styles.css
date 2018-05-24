@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+.navbar-brand img {
+    width:32px;
+    height:32px;
+    position: relative;
+    top: -4px;
+}
+
+a.navbar-brand {
+    font-family: 'Freestyle Script', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 32px;
+}
