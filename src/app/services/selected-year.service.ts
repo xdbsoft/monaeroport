@@ -10,7 +10,7 @@ export class SelectedYearService {
   private selectedYear: number;
 
   constructor() { 
-    this.selectedYear = 2015;
+    this.selectedYear = 2018;
     this.selectedYear$ = new BehaviorSubject<number>(this.selectedYear);
   }
 
