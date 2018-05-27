@@ -8,10 +8,39 @@
       </monapt-card-map>
     </div>
     <div class="col-lg-6">
-      <!--
       <monapt-card title="Configuration" iconClasses="fas fa-cogs">
-        Année: {{year}}
-      </monapt-card> -->
+        <div class="form-group row">
+          <label for="staticYear" class="col-sm-3 col-form-label">Année :</label>
+          <div class="col-sm-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button class="btn btn-primary" (click)="decrementYear()">-</button>
+                </div>
+                <input readonly type="text" class="form-control" [value]="year" id="staticYear" />
+                <div class="input-group-append">
+                  <button class="btn btn-primary" (click)="incrementYear()">+</button>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="staticYear" class="col-sm-3 col-form-label">Zone :</label>
+          <div class="col-sm-9">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cbxM" value="M" [(ngModel)]="zoneM" (ngModelChange)="selectedZoneChange($event)">
+              <label class="form-check-label" for="cbxM">Métropole</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cbxO" value="O" [(ngModel)]="zoneO" (ngModelChange)="selectedZoneChange($event)">
+              <label class="form-check-label" for="cbxO">Outre-mer</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cbxI" value="I" [(ngModel)]="zoneI" (ngModelChange)="selectedZoneChange($event)">
+              <label class="form-check-label" for="cbxI">International</label>
+            </div>
+          </div>
+        </div>
+      </monapt-card>
 
       <monapt-card-line-chart title="Evolution du traffic" [labels]="evolutionLabels" [datasets]="evolutionDatasets">
       </monapt-card-line-chart>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { AirportInfo } from '../../model/airport-info';
@@ -19,13 +19,17 @@ export class AirportTrafficComponent implements OnInit {
   selectedYear$: Observable<number>;
   year: number = 2016;
 
+  zoneM: boolean = true;
+  zoneO: boolean = true;
+  zoneI: boolean = true;
+  
   selectedAirport$: Observable<AirportInfo>;
   selectedAirport: AirportInfo;
 
   labels: string[] = ['Année','Mois','Direction','Escale','Pays','Zone','Faisceau','Nombre de vols','Nombre de passagers'];
   
   cube: olap.model.Table;
-  yearCube: olap.model.Table;
+  slicedCube: olap.model.Table;
   
   keyFiguresLabels: string[] = ['Court courriers','Moyen courriers','Long courriers'];
   keyFiguresValues: number[] = [];
@@ -61,28 +65,50 @@ export class AirportTrafficComponent implements OnInit {
       
       this.year = v;
 
-      if (this.cube) {
-        
-        this.yearCube = this.cube.slice('year', this.year);
-        
-        this.setupMap();
-        console.log('setupMap done');
-        this.setupKeyFigures();
-        console.log('setupKeyFigures done');
-        this.setupEvolution();
-        console.log('setupEvolution done');
-
-      }
+      this.setupSlicedCube();
     });
 
     this.cube = new olap.model.Table({
       dimensions: [],
       fields: [],
     });
-    this.yearCube = new olap.model.Table({
+    this.slicedCube = new olap.model.Table({
       dimensions: [],
       fields: [],
     });
+  }
+
+  getYearCube(year: number): olap.model.Table {
+    let c = this.cube.slice('year', year);
+    if (!this.zoneM || !this.zoneO || !this.zoneI) {
+      c = c.dice( (pt) => {
+        if(pt[5] == "M") {
+          return this.zoneM;
+        }
+        if(pt[5] == "O") {
+          return this.zoneO;
+        }
+        if(pt[5] == "I") {
+          return this.zoneI;
+        }
+      });
+    }
+    return c;
+  }
+
+  setupSlicedCube() {
+    if (this.cube) {
+        
+      this.slicedCube = this.getYearCube(this.year);
+      
+      this.setupMap();
+      console.log('setupMap done');
+      this.setupKeyFigures();
+      console.log('setupKeyFigures done');
+      this.setupEvolution();
+      console.log('setupEvolution done');
+
+    }
   }
 
   setupCube(icao: string) {
@@ -92,15 +118,8 @@ export class AirportTrafficComponent implements OnInit {
       console.log("Traffic retrieved", icao, this.year, cube.points.length)
       this.cube = cube;
       console.log(this.cube);
-      this.yearCube = this.cube.slice('year', this.year);
 
-      this.setupMap();
-      console.log('setupMap done');
-      this.setupKeyFigures();
-      console.log('setupKeyFigures done');
-      this.setupEvolution();
-      console.log('setupEvolution done');
-
+      this.setupSlicedCube();
     })
     .catch(reason => {
       console.log("getTraffic failed", icao, reason)
@@ -112,7 +131,7 @@ export class AirportTrafficComponent implements OnInit {
       return;
     }
 
-    const keyFigures = this.yearCube
+    const keyFigures = this.slicedCube
       .rollup('dest_range', ['flights'], (sum, value) => [sum[0]+value[0]], [0])
     ;
 
@@ -142,9 +161,9 @@ export class AirportTrafficComponent implements OnInit {
 
     years.forEach(year => {
   
-      let cube = this.yearCube;
+      let cube = this.slicedCube;
       if (year !== this.year) {
-        cube = this.cube.slice('year', year);
+        cube = this.getYearCube(year);
       }
 
       const yearlyFigures = cube.rollup('month', ['flights'], (sum, value) => [sum[0]+value[0]], [0]);
@@ -195,7 +214,7 @@ export class AirportTrafficComponent implements OnInit {
       return;
     }
 
-    const destinations = this.yearCube.rollup('dest_icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
+    const destinations = this.slicedCube.rollup('dest_icao', ['flights'], (sum, value) => [sum[0]+value[0]], [0]).rows;
     const total = destinations.reduce((s, v) => s + v[1], 0);
     console.log('destinations', this.year, total, destinations);
 
@@ -238,6 +257,22 @@ export class AirportTrafficComponent implements OnInit {
 
   getChartSuffix() {
     return 'vols en ' + this.year;
+  }
+
+  decrementYear() {
+    this.year = this.year - 1;
+    this.selectedYearService.setSelected(this.year);
+  }
+
+  incrementYear() {
+    this.year = this.year + 1;
+    this.selectedYearService.setSelected(this.year);
+  }
+
+  selectedZoneChange() {
+    console.log('Zone selection updated', this.zoneM, this.zoneI, this.zoneO);
+
+    this.setupSlicedCube();
   }
 
 }

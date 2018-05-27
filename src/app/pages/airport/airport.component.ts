@@ -13,13 +13,10 @@ import { SelectedYearService } from '../../services/selected-year.service';
 export class AirportComponent implements OnInit {
 
   selectedAirport$: Observable<AirportInfo>;
-  selectedYear$: Observable<number>;
 
   constructor(private selectedAirportService: SelectedAirportService,
-              private selectedYearService: SelectedYearService,
               private activatedRoute: ActivatedRoute) {
     this.selectedAirport$ = this.selectedAirportService.getInfos();
-    this.selectedYear$ = this.selectedYearService.getYear();
   }
 
   ngOnInit() {
@@ -27,11 +24,6 @@ export class AirportComponent implements OnInit {
       console.log('activatedRoute', params);
       this.selectedAirportService.setSelected(params.get('icao'));
     });
-  }
-
-  onYearChange(newYear) {
-    console.log("onYearChange", newYear)
-    this.selectedYearService.setSelected(newYear);
   }
 
 }
