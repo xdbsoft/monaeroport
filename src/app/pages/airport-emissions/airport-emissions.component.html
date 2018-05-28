@@ -5,27 +5,26 @@
 <div class="container-fluid" style="margin-top:1em;" *ngIf="cube">
 
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-12">
 
-        <monapt-card-line-chart title="Evolution des émissions de CO2 (en kt)" [labels]="evolutionLabels" [datasets]="evolCo2Datasets">
-        </monapt-card-line-chart>
-        
-        <monapt-card-line-chart title="Evolution des émissions de NOX (en t)" [labels]="evolutionLabels" [datasets]="evolNoxDatasets">
-        </monapt-card-line-chart>
+        <monapt-card title="Evolution des émissions par équivalent passager" iconClasses="fas fa-chart-line">
+          <div>
+            <canvas baseChart
+                [datasets]="evolutionDatasets"
+                [labels]="evolutionLabels"
+                [options]="config.options"
+                [chartType]="config.chartType"
+                [legend]="config.legend"
+            ></canvas>
+          </div>
+        </monapt-card>
 
         <monapt-card title="Graphique personnalisé" iconClasses="fas fa-chart-pie">
           <div>
-            <monapt-dynpiechart [cube]="yearCube"></monapt-dynpiechart>
+            <monapt-dynpiechart [cube]="cube"></monapt-dynpiechart>
           </div>
         </monapt-card>
         
-      </div>
-      <div class="col-lg-6">
-        <monapt-card-line-chart title="Evolution des émissions de COVNM (en kt)" [labels]="evolutionLabels" [datasets]="evolCovnmDatasets">
-        </monapt-card-line-chart>
-        
-        <monapt-card-line-chart title="Evolution des émissions de TSP (en t)" [labels]="evolutionLabels" [datasets]="evolTspDatasets">
-        </monapt-card-line-chart>
       </div>
     </div>
 

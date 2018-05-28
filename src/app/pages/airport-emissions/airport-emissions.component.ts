@@ -22,63 +22,62 @@ export class AirportEmissionsComponent implements OnInit {
 
   alert: IAlert;
 
-  selectedYear$: Observable<number>;
-  year: number = 2016;
-
   selectedAirport$: Observable<AirportInfo>;
   selectedAirport: AirportInfo;
 
   labels: string[] = ['Année','Mois','Zone','Faisceau','Catégorie','Nombre de mouvements','Nombre de passagers','Nombre de passagers équivalents','CO2 (kt)','NOX (t)','COVNM (t)', 'TSP (t)'];
   cube: olap.model.Table;
-  yearCube: olap.model.Table;
-
-  evolutionLabels: string[] = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  evolCo2Datasets = [
-    {data: [], label: this.year-2},
-    {data: [], label: this.year-1},
-    {data: [], label: this.year}
-  ];
-  evolNoxDatasets = [
-    {data: [], label: this.year-2},
-    {data: [], label: this.year-1},
-    {data: [], label: this.year}
-  ];
-  evolCovnmDatasets = [
-    {data: [], label: this.year-2},
-    {data: [], label: this.year-1},
-    {data: [], label: this.year}
-  ];
-  evolTspDatasets = [
-    {data: [], label: this.year-2},
-    {data: [], label: this.year-1},
-    {data: [], label: this.year}
+  
+  evolutionLabels: number[] = []
+  evolutionDatasets = [
+    {data: [], label: "CO2 (kg/pax eq)", type: 'bar', yAxisID: 'y-axis-0'},
+    {data: [], label: "NOX (g/pax eq)", type: 'bar', yAxisID: 'y-axis-0'},
+    {data: [], label: "COVNM (g/pax eq)", type: 'bar', yAxisID: 'y-axis-0'},
+    {data: [], label: "TSP (g/pax eq)", type: 'bar', yAxisID: 'y-axis-0'},
+    {data: [], label: "Mouvements", type: 'line', fill: false, yAxisID: 'y-axis-1'}
   ];
 
-  constructor(private selectedAirportService: SelectedAirportService, private selectedYearService: SelectedYearService, 
+  config = {
+    chartType: 'bar',
+    legend: true,
+    options: {
+      scales: {
+        yAxes: [{
+          type: 'linear',
+          display: true,
+          position: 'left',
+          id: 'y-axis-0',
+        }, {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          id: 'y-axis-1',
+
+          // grid line settings
+          gridLines: {
+            drawOnChartArea: false, // only want the grid lines for one axis to show up
+          },
+        }],
+      }
+    }
+  }
+
+  constructor(private selectedAirportService: SelectedAirportService, 
     private airportEmissionsService: AirportEmissionsService) { 
 
+    this.evolutionLabels = []
+    for (let y = 2000; y < 2019; y++) {
+      this.evolutionLabels.push(y);
+    }
   
     this.selectedAirport$ = this.selectedAirportService.getInfos();
-    this.selectedYear$ = this.selectedYearService.getYear();
-
+    
     this.selectedAirport$.subscribe( v => {
 
       console.log("Selected airport updated", v)
 
       this.selectedAirport = v;
       this.setupCube(this.selectedAirport.icao);
-
-    });
-
-    this.selectedYear$.subscribe( v => {
-
-      console.log("Selected year updated", v)
-
-      this.year = v;
-      if (this.cube) { 
-        this.yearCube = this.cube.slice('year', this.year);
-      }
-      this.setupEvolution();
 
     });
   }
@@ -91,14 +90,12 @@ export class AirportEmissionsComponent implements OnInit {
   }
 
   setupCube(icao: string) {
+    console.log('setupCube', icao);
 
     this.airportEmissionsService.getEmissions(icao).then(cube => {
 
       console.log("Emissions retrieved", icao, cube.points.length)
       this.cube = cube;
-      if (this.cube) {
-        this.yearCube = this.cube.slice('year', this.year);
-      }
       this.alert = null;
 
       this.setupEvolution();
@@ -106,8 +103,7 @@ export class AirportEmissionsComponent implements OnInit {
     })
     .catch(reason => {
       this.alert = {type: 'warning', message: 'Aucune information d\'émission n\'a pu être chargée.'}
-      this.cube = null
-      this.yearCube = null;
+      this.cube = null;
       console.log("getEmissions failed", icao, reason)
     });
   }
@@ -120,7 +116,7 @@ export class AirportEmissionsComponent implements OnInit {
 
     for (let i=0; i<idxs.length; i++) {
 
-      const count = aggregation[0]
+      const count = aggregation[i]
       const newCount = count + value[idxs[i]]
 
       newCounts.push(newCount);
@@ -130,42 +126,28 @@ export class AirportEmissionsComponent implements OnInit {
   }
   
   setupEvolution() {
-    if (!this.cube || !this.year) {
+    if (!this.cube) {
       return;
     }
+    console.log('setupEvolution');
 
-    const years = [this.year-2, this.year-1, this.year];
-
-    this.evolCo2Datasets = [];
-    this.evolNoxDatasets = [];
-    this.evolCovnmDatasets = [];
-    this.evolTspDatasets = [];
-
-    years.forEach(year => {
-
-      const yearlyFigures = this.cube
-        .slice('year', year)
-        .rollup('month', ['co2_kt','nox_t','covnm_t','tsp_t'], this.aggregate([3,4,5,6]), [0,0,0,0])
-      ;
-      console.log('yearCube',year, yearlyFigures);
-      this.evolCo2Datasets.push({
-        label: year,
-        data: yearlyFigures.data.map(v => Math.round(v[0]*100)/100),
-      });
-      this.evolNoxDatasets.push({
-        label: year,
-        data: yearlyFigures.data.map(v => Math.round(v[1]*100)/100),
-      });
-      this.evolCovnmDatasets.push({
-        label: year,
-        data: yearlyFigures.data.map(v => Math.round(v[2]*100)/100),
-      });
-      this.evolTspDatasets.push({
-        label: year,
-        data: yearlyFigures.data.map(v => Math.round(v[3]*100)/100),
-      });
-
+    this.evolutionDatasets.forEach(d => {
+      d.data = [];
     });
+
+    const yearlyFigures = this.cube
+      .rollup('year', ['mov','pax','peq','co2_kt','nox_t','covnm_t','tsp_t'], this.aggregate([0,1,2,3,4,5,6]), [0,0,0,0,0,0,0])
+    ;
+    console.log('rolledupCube', yearlyFigures);
+    
+    this.evolutionDatasets[0].data = yearlyFigures.data.map(v => Math.round(v[3]*1000000*100/v[2])/100);
+    this.evolutionDatasets[1].data = yearlyFigures.data.map(v => Math.round(v[4]*1000000*100/v[2])/100);
+    this.evolutionDatasets[2].data = yearlyFigures.data.map(v => Math.round(v[5]*1000000*100/v[2])/100);
+    this.evolutionDatasets[3].data = yearlyFigures.data.map(v => Math.round(v[6]*1000000*100/v[2])/100);
+    
+    this.evolutionDatasets[4].data = yearlyFigures.data.map(v => v[0]);
+
+    console.log('co2', this.evolutionDatasets[0].data);
   }
 
 }

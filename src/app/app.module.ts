@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { CardMapComponent } from './cards/card-map/card-map.component';
-import { PiechartComponent } from './charts/piechart/piechart.component';
+import { RadarchartComponent } from './charts/radarchart/radarchart.component';
 import { CardPieChartComponent } from './cards/card-pie-chart/card-pie-chart.component';
 import { HomeComponent } from './pages/home/home.component';
 import { InfoComponent } from './pages/info/info.component';
@@ -39,7 +39,7 @@ import { DynpiechartComponent } from './charts/dynpiechart/dynpiechart.component
   declarations: [
     AppComponent,
     CardMapComponent,
-    PiechartComponent,
+    RadarchartComponent,
     CardPieChartComponent,
     HomeComponent,
     InfoComponent,
