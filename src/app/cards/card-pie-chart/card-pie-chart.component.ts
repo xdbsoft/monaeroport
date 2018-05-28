@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'monapt-card-pie-chart',
   templateUrl: './card-pie-chart.component.html',
-  styleUrls: ['./card-pie-chart.component.css']
+  styleUrls: ['./card-pie-chart.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardPieChartComponent implements OnInit {
 
