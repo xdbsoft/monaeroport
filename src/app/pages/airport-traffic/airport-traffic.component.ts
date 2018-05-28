@@ -179,17 +179,23 @@ export class AirportTrafficComponent implements OnInit {
   }
 
   color(a: AirportInfo): string {
-    if (a.range == 'CC') {
-      return '#38ada9';
-    } else if (a.range == 'MC') {
-      return '#1e3799';
-    } else if (a.range == 'LC') {
-      return '#fa983a';
+    if (a) {
+      if (a.range == 'CC') {
+        return '#38ada9';
+      } else if (a.range == 'MC') {
+        return '#1e3799';
+      } else if (a.range == 'LC') {
+        return '#fa983a';
+      }
     }
     return '#000000';
   }
 
   getGeoJSONFeature(a: AirportInfo, color: string): any {
+
+    if (!a) {
+      return undefined;
+    }
 
     if (!color) {
       color = this.color(a);
@@ -225,30 +231,35 @@ export class AirportTrafficComponent implements OnInit {
 
       this.mapFeatures = [];
       const selectedAirport = this.getGeoJSONFeature(this.selectedAirport, '#0000ff');
-      this.mapFeatures.push(selectedAirport);
+      if (selectedAirport) {
+        
+        this.mapFeatures.push(selectedAirport);
 
-      destinations.forEach(element => {
-        const destAirportInfo = dest.get(element[0]);
-        //console.log('Dest: ', element[0], destAirportInfo);
-        const destAirport = this.getGeoJSONFeature(destAirportInfo, undefined);
-        this.mapFeatures.push(destAirport);
+        destinations.forEach(element => {
+          const destAirportInfo = dest.get(element[0]);
+          //console.log('Dest: ', element[0], destAirportInfo);
+          const destAirport = this.getGeoJSONFeature(destAirportInfo, undefined);
+          if (destAirport) {
+            this.mapFeatures.push(destAirport);
 
-        let line = {
-            type: "Feature",
-            properties: {
-                title: selectedAirport.properties.title + ' - ' + destAirport.properties.title,
-                content: '' + element[1] + ' vols en ' + this.year,
-                color: destAirport.properties.color,
-                weight: Math.floor(15*element[1]/(total+1))
-            },
-            geometry: {
-            type: "LineString",
-            coordinates: [selectedAirport.geometry.coordinates, destAirport.geometry.coordinates]
+            let line = {
+                type: "Feature",
+                properties: {
+                    title: selectedAirport.properties.title + ' - ' + destAirport.properties.title,
+                    content: '' + element[1] + ' vols en ' + this.year,
+                    color: destAirport.properties.color,
+                    weight: Math.floor(15*element[1]/(total+1))
+                },
+                geometry: {
+                type: "LineString",
+                coordinates: [selectedAirport.geometry.coordinates, destAirport.geometry.coordinates]
+              }
+            };
+            this.mapFeatures.push(line);
           }
-        };
-        this.mapFeatures.push(line);
 
-      });
+        });
+      }
     });
   }
 
