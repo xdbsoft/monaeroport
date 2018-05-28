@@ -27,15 +27,15 @@
           <label for="staticYear" class="col-sm-3 col-form-label">Zone :</label>
           <div class="col-sm-9">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="cbxM" value="M" [(ngModel)]="zoneM" (ngModelChange)="selectedZoneChange($event)">
+              <input class="form-check-input" type="checkbox" id="cbxM" value="M" [(ngModel)]="zoneM" (ngModelChange)="selectedZoneChange()">
               <label class="form-check-label" for="cbxM">Métropole</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="cbxO" value="O" [(ngModel)]="zoneO" (ngModelChange)="selectedZoneChange($event)">
+              <input class="form-check-input" type="checkbox" id="cbxO" value="O" [(ngModel)]="zoneO" (ngModelChange)="selectedZoneChange()">
               <label class="form-check-label" for="cbxO">Outre-mer</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="cbxI" value="I" [(ngModel)]="zoneI" (ngModelChange)="selectedZoneChange($event)">
+              <input class="form-check-input" type="checkbox" id="cbxI" value="I" [(ngModel)]="zoneI" (ngModelChange)="selectedZoneChange()">
               <label class="form-check-label" for="cbxI">International</label>
             </div>
           </div>
