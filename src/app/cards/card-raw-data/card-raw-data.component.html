@@ -7,12 +7,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let r of data.slice((page-1)*pageSize, page*pageSize)">
+      <tr *ngFor="let r of rows.slice((page-1)*pageSize, page*pageSize)">
         <td *ngFor="let v of r">{{v}}</td>
       </tr>
     </tbody>
   </table>
 
-  <ngb-pagination class="d-flex justify-content-center"  [collectionSize]="data.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" aria-label="Pagination"></ngb-pagination>
+  <ngb-pagination class="d-flex justify-content-center"  [collectionSize]="rows.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" aria-label="Pagination"></ngb-pagination>
 
 </monapt-card>
