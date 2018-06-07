@@ -33,10 +33,7 @@ export class LeafletComponent implements OnInit, OnChanges {
 
     console.log('map', this.map);
 
-    let osmUrl = 'http://localhost:8085/tiles/{z}/{x}/{-y}.png';
-    if (environment.production) {
-      osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    }
+    let osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     L.tileLayer(osmUrl, {
       maxZoom: 18,
